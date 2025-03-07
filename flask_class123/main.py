@@ -3,7 +3,7 @@ from flask import Flask, url_for
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/carousel')
 def form_sample():
     return f'''<!doctype html>
 <html lang="en">
