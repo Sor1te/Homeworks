@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+    <title> aeig</title>
+    </head>
+    <body>
+        <h1>Миссия Колонизация Марса</h1>
+        <h4 class="text">И на Марсе будут яблони цвести!</h4>
+        {% if "строитель" in prof %}
+        <h2 align="center">Инженерные тренажеры</h2>
+        <img src="static/img/spaceship.png">
+        {% elif "инженер" in prof %}
+        <img src="static/img/spaceship.png">
+        <h2 align="center">Инженерные тренажеры</h2>
+    {% else %}
+       <h2 align="center">Научные симуляторы</h2>
+    {% endif %}
+    </body>
+</html>
