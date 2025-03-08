@@ -1,3 +1,6 @@
-h1 {
-    color: #c8c9cc
+.main_form {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 400px;
+    background-color: #ffdab9;
 }
