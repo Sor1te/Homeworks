@@ -4,6 +4,7 @@ from data.news import News
 from data import db_session
 
 db_session.global_init("db/blogs.db")
+
 news = News()
 user = User()
 user.name = "Пользователь 112434"

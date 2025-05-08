@@ -1,27 +1,18 @@
-from flask import Flask
-from data.users import User
-from data.news import News
-from data import db_session
+from requests import get, post, delete, put
 
-db_session.global_init("db/blogs.db")
-news = News()
-user = User()
-user.name = "Пользователь 112434"
-user.about = "биография пользователя 1235324"
-user.email = "email234@email.ru"
-db_sess = db_session.create_session()
-db_sess.add(user)
-db_sess.commit()
-
-user.name = "Пользователь 2"
-user.about = "биография пользователя 34"
-user.email = "ema2il@email.ru"
-db_sess.add(user)
-db_sess.commit()
-
-
-user = db_sess.query(User).first()
-print(user.name)
-
-for user in db_sess.query(User).all():
-    print(user)
+print(get('http://localhost:8080/api/users').json())
+print(delete('http://localhost:8080/api/users/3').json())
+print(post('http://localhost:8080/api/users',
+           json={'surname': 'Кто-то', 'name': 'Кто-то',
+                 'age': 28,
+                 'position': 'Директор',
+                 'speciality': 'Тим-лидер',
+                 'address': 'Москва', 'email': 'yes_1234@gmail.com'}).json())
+print(get('http://localhost:8080/api/users/3').json())
+print(put('http://localhost:8080/api/users/3',
+           json={'surname': 'Фамилия', 'name': 'Имя',
+                 'age': 28,
+                 'position': 'Директор',
+                 'speciality': 'Тим-лидер',
+                 'address': 'Москва', 'email': 'yes_1234@gmail.com'}).json())
+print(get('http://localhost:8080/api/users/3').json())
