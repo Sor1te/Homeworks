@@ -1,10 +1,7 @@
 import flask
 from flask import jsonify, make_response, request
-from flask_login import UserMixin
-from sqlalchemy_serializer import SerializerMixin
 
 from . import db_session
-from .db_session import SqlAlchemyBase
 from .users import User
 
 blueprint = flask.Blueprint(
@@ -21,7 +18,7 @@ def get_users():
     return jsonify(
         {
             'users': [item.to_dict(only=(
-                'surname', 'name', 'age', 'position', 'speciality', 'address', 'email')) for item in users]
+                'surname', 'name', 'age', 'position', 'speciality', 'city', 'address', 'email')) for item in users]
         }
     )
 
@@ -35,7 +32,7 @@ def get_one_user(user_id):
     return jsonify(
         {
             'users': users.to_dict(only=(
-                'surname', 'name', 'age', 'position', 'speciality', 'address', 'email'))
+                'surname', 'name', 'age', 'position', 'speciality', 'city', 'address', 'email'))
         }
     )
 
@@ -45,7 +42,7 @@ def create_user():
     if not request.json:
         return make_response(jsonify({'error': 'Empty request'}), 400)
     elif not all(key in request.json for key in
-                 ['surname', 'name', 'age', 'position', 'speciality', 'address', 'email']):
+                 ['surname', 'name', 'age', 'position', 'speciality', 'city', 'address', 'email']):
         return make_response(jsonify({'error': 'Bad request'}), 400)
     db_sess = db_session.create_session()
     users = User(
@@ -54,6 +51,7 @@ def create_user():
         age=request.json['age'],
         position=request.json['position'],
         speciality=request.json['speciality'],
+        city=request.json['city'],
         address=request.json['address'],
         email=request.json['email']
     )
@@ -78,7 +76,7 @@ def update_user(user_id):
     if not request.json:
         return make_response(jsonify({'error': 'Empty request'}), 400)
     elif not all(key in request.json for key in
-                 ['surname', 'name', 'age', 'position', 'speciality', 'address', 'email']):
+                 ['surname', 'name', 'age', 'position', 'speciality', 'city', 'address', 'email']):
         return make_response(jsonify({'error': 'Bad request'}), 400)
     db_sess = db_session.create_session()
     db_sess.query(User).filter(User.id == user_id). \
@@ -87,6 +85,7 @@ def update_user(user_id):
                 'age': request.json['age'],
                 'position': request.json['position'],
                 'speciality': request.json['speciality'],
+                'city': request.json['city'],
                 'address': request.json['address'],
                 'email': request.json['email']})
     db_sess.commit()

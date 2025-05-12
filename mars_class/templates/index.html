@@ -5,6 +5,7 @@
 {% if current_user.is_authenticated %}
 <a href="departments_shower" class="btn btn-secondary">Департаменты</a>
 <a href="jobs" class="btn btn-secondary">Добавить работу</a>
+<a href="/users_show/{{id_user}}" class="btn btn-secondary">Увидеть родной город</a>
 {% endif %}
 {% for item in jobs %}
 <div class="col-md6 border rounded">

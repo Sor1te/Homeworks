@@ -4,6 +4,7 @@ from flask import (Flask, request, render_template, redirect, abort,
 from flask_login import LoginManager, login_user, login_required, logout_user, \
     current_user
 from requests import get
+import pprint
 
 from data import db_session, jobs_api, users_api
 from data.users import User
@@ -208,6 +209,7 @@ def reqister():
             age=form.age.data,
             position=form.position.data,
             speciality=form.speciality.data,
+            city=form.city.data,
             address=form.address.data,
             email=form.email.data
         )
@@ -247,6 +249,76 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
+@app.route('/users_show/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def user_city_show(user_id):
+    city = get(f'http://localhost:8080/api/users/{user_id}').json()
+    toponym_to_find = city
+
+    geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
+
+    geocoder_params = {
+        "apikey": "8013b162-6b42-4997-9691-77b7074026e0",
+        "geocode": toponym_to_find,
+        "format": "json"}
+
+    response = requests.get(geocoder_api_server, params=geocoder_params)
+
+    if not response:
+        # обработка ошибочной ситуации
+        pass
+
+    # Преобразуем ответ в json-объект
+    json_response = response.json()
+    # Получаем первый топоним из ответа геокодера.
+    toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
+    # Координаты центра топонима:
+    toponym_coodrinates = toponym["Point"]["pos"]
+    # Долгота и широта:
+    toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
+
+    delta = "0.25"
+    apikey = "f3a0fe3a-b07e-4840-a1da-06f18b2ddf13"
+
+    # Собираем параметры для запроса к StaticMapsAPI:
+    map_params = {
+        "ll": ",".join([toponym_longitude, toponym_lattitude]),
+        "spn": ",".join([delta, delta]),
+        "apikey": apikey,
+
+    }
+
+    map_api_server = "https://static-maps.yandex.ru/v1"
+    # ... и выполняем запрос
+    response = requests.get(map_api_server, params=map_params)
+    map_file = f"static/images/map.png"
+    with open(map_file, "wb") as file:
+        file.write(response.content)
+    return '''<!doctype html>
+                        <html lang="en">
+                          <head>
+                            <meta charset="utf-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                             <link rel="stylesheet"
+                             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+                             integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+                             crossorigin="anonymous">
+                            <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
+                            <title>Пример загрузки файла</title>
+                          </head>
+                          <body>
+                            <h1>Загрузим файл</h1>
+                            <form method="post" enctype="multipart/form-data">
+                               <div class="form-group">
+                                    <label for="photo">Выберите файл</label>
+                                    <input type="file" class="form-control-file" id="photo" name="file">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Отправить</button>
+                            </form>
+                          </body>
+                        </html>'''
+
+
 def main():
     db_session.global_init("db/blogs.db")
     app.register_blueprint(jobs_api.blueprint)
@@ -259,9 +331,11 @@ def index():
     db_sess = db_session.create_session()
     if current_user.is_authenticated:
         jobs = db_sess.query(Jobs).all()
+        id_user = current_user.id
     else:
         jobs = []
-    return render_template("index.html", jobs=jobs)
+        id_user = -1
+    return render_template("index.html", jobs=jobs, id_user=id_user)
 
 
 @app.errorhandler(404)

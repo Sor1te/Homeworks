@@ -50,6 +50,15 @@
         {% endfor %}
     </p>
     <p>
+        {{ form.city.label }}<br>
+        {{ form.city(class="form-control", type="form-control") }}<br>
+        {% for error in form.city.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
         {{ form.email.label }}<br>
         {{ form.email(class="form-control", type="email") }}<br>
         {% for error in form.email.errors %}
