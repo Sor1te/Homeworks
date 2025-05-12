@@ -32,6 +32,17 @@
         {% endfor %}
     </p>
     <p>
+        <div class="mb-3">
+            {{ form.hazard_level.label(class="form-label") }}
+            {{ form.hazard_level(class="form-select") }}
+            {% if form.hazard_level.errors %}
+            {% for error in form.hazard_level.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </p>
+    <p>
         {{ form.work_size.label }}<br>
         {{ form.work_size(class="form-control") }}<br>
         {% for error in form.work_size.errors %}

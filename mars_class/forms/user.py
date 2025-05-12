@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, TextAreaField, SubmitField, EmailField, BooleanField, IntegerField
+from wtforms import PasswordField, StringField, TextAreaField, SubmitField, EmailField, BooleanField, IntegerField, \
+    SelectField
 from wtforms.validators import DataRequired
 
 
@@ -29,6 +30,21 @@ class JobsForm(FlaskForm):
     team_leader = IntegerField("id teamleader")
     work_size = IntegerField("Время работы")
     collaborators = StringField("Участники")
+    hazard_level = SelectField(
+        "Уровень опасности",
+        choices=[
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+        ],
+    )
     is_finished = SubmitField('Завершена')
     submit = SubmitField('Применить')
 

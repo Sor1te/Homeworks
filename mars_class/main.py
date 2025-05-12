@@ -8,7 +8,7 @@ from requests import get
 from data import db_session, jobs_api, users_api
 from data.users import User
 from data.jobs import Jobs
-from data.category import Department
+from data.departments import Department
 from forms.user import RegisterForm, LoginForm, JobsForm, DepartmentsForm
 
 app = Flask(__name__)
@@ -120,6 +120,7 @@ def add_job():
         jobs.team_leader = form.team_leader.data
         jobs.collaborators = form.collaborators.data
         jobs.work_size = form.work_size.data
+        jobs.hazard_level = form.hazard_level.data
         jobs.is_finished = form.is_finished.data
         db_sess.add(jobs)
         db_sess.merge(current_user)
@@ -145,6 +146,7 @@ def edit_jobs(id):
             form.team_leader.data = jobs.team_leader
             form.collaborators.data = jobs.collaborators
             form.work_size.data = jobs.work_size
+            form.hazard_level.data = jobs.hazard_level
             form.is_finished.data = jobs.is_finished
         else:
             abort(404)
@@ -159,6 +161,7 @@ def edit_jobs(id):
             form.team_leader.data = jobs.team_leader
             form.collaborators.data = jobs.collaborators
             form.work_size.data = jobs.work_size
+            form.hazard_level.data = jobs.hazard_level
             form.is_finished.data = jobs.is_finished
             db_sess.commit()
             return redirect('/')

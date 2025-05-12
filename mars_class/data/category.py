@@ -1,6 +1,4 @@
 import sqlalchemy
-from sqlalchemy import orm
-
 from .db_session import SqlAlchemyBase
 
 association_table = sqlalchemy.Table(
@@ -8,18 +6,13 @@ association_table = sqlalchemy.Table(
     SqlAlchemyBase.metadata,
     sqlalchemy.Column('job', sqlalchemy.Integer,
                       sqlalchemy.ForeignKey('job.id')),
-    sqlalchemy.Column('department', sqlalchemy.Integer,
-                      sqlalchemy.ForeignKey('department.id'))
+    sqlalchemy.Column('category', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('category.id'))
 )
 
 
-class Department(SqlAlchemyBase):
-    __tablename__ = 'department'
-    id = sqlalchemy.Column(sqlalchemy.Integer,
-                           primary_key=True, autoincrement=True)
-    title = sqlalchemy.Column(sqlalchemy.String)
-    chief = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
-    members = sqlalchemy.Column(sqlalchemy.String)
-    email = sqlalchemy.Column(sqlalchemy.String)
-    user = sqlalchemy.orm.relationship('User')
-
+class Category(SqlAlchemyBase):
+    __tablename__ = 'category'
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True,
+                           autoincrement=True)
+    hazard_category = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
