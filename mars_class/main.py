@@ -78,10 +78,10 @@ def edit_departments(id):
             (current_user.id == 1)
         ).first()
         if departments:
-            form.title.data = departments.title
-            form.chief.data = departments.chief
-            form.members.data = departments.members
-            form.email.data = departments.email
+            departments.title = form.title.data
+            departments.chief = form.chief.data
+            departments.members = form.members.data
+            departments.email = form.email.data
             db_sess.commit()
             return redirect('/departments_shower')
         else:
@@ -157,12 +157,12 @@ def edit_jobs(id):
                                           (current_user.id == 1)
                                           ).first()
         if jobs:
-            form.job.data = jobs.job
-            form.team_leader.data = jobs.team_leader
-            form.collaborators.data = jobs.collaborators
-            form.work_size.data = jobs.work_size
-            form.hazard_level.data = jobs.hazard_level
-            form.is_finished.data = jobs.is_finished
+            jobs.job = form.job.data
+            jobs.team_leader = form.team_leader.data
+            jobs.collaborators = form.collaborators.data
+            jobs.work_size = form.work_size.data
+            jobs.hazard_level = form.hazard_level.data
+            jobs.is_finished = form.is_finished.data
             db_sess.commit()
             return redirect('/')
         else:
