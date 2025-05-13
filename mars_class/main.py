@@ -251,7 +251,9 @@ def login():
 @app.route('/users_show/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def user_city_show(user_id):
-    city = get(f'http://localhost:8080/api/users/{user_id}').json()
+    user_data = get(f'http://localhost:8080/api/users/{user_id}').json()['users']
+    name = f"{user_data['name']} {user_data['surname']}"
+    city = user_data['city']
     toponym_to_find = city
 
     geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
@@ -276,7 +278,7 @@ def user_city_show(user_id):
     # Долгота и широта:
     toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
 
-    delta = "0.25"
+    delta = "0.3"
     apikey = "f3a0fe3a-b07e-4840-a1da-06f18b2ddf13"
 
     # Собираем параметры для запроса к StaticMapsAPI:
@@ -293,29 +295,7 @@ def user_city_show(user_id):
     map_file = f"static/images/map.png"
     with open(map_file, "wb") as file:
         file.write(response.content)
-    return '''<!doctype html>
-                        <html lang="en">
-                          <head>
-                            <meta charset="utf-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-                             <link rel="stylesheet"
-                             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
-                             integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
-                             crossorigin="anonymous">
-                            <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
-                            <title>Пример загрузки файла</title>
-                          </head>
-                          <body>
-                            <h1>Загрузим файл</h1>
-                            <form method="post" enctype="multipart/form-data">
-                               <div class="form-group">
-                                    <label for="photo">Выберите файл</label>
-                                    <input type="file" class="form-control-file" id="photo" name="file">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Отправить</button>
-                            </form>
-                          </body>
-                        </html>'''
+    return render_template('photo_show.html', name=name, city=city)
 
 
 def main():
@@ -334,7 +314,6 @@ def index():
     else:
         jobs = []
         id_user = -1
-    print(id_user)
     return render_template("index.html", jobs=jobs, id_user=id_user)
 
 
