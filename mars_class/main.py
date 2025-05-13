@@ -1,6 +1,5 @@
 import requests
-from flask import (Flask, request, render_template, redirect, abort,
-                   make_response, jsonify)
+from flask import Flask, request, render_template, redirect, abort, make_response, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, \
     current_user
 from requests import get
@@ -43,7 +42,7 @@ def add_departments():
         departments.chief = form.chief.data
         departments.members = form.members.data
         departments.email = form.email.data
-        db_sess.add(departments)
+        current_user.departments.append(departments)
         db_sess.merge(current_user)
         db_sess.commit()
         return redirect('/departments_shower')
@@ -123,7 +122,7 @@ def add_job():
         jobs.work_size = form.work_size.data
         jobs.hazard_level = form.hazard_level.data
         jobs.is_finished = form.is_finished.data
-        db_sess.add(jobs)
+        current_user.jobs.append(jobs)
         db_sess.merge(current_user)
         db_sess.commit()
         return redirect('/')
@@ -335,6 +334,7 @@ def index():
     else:
         jobs = []
         id_user = -1
+    print(id_user)
     return render_template("index.html", jobs=jobs, id_user=id_user)
 
 

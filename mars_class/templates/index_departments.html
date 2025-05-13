@@ -9,7 +9,7 @@
 {% for item in departments %}
 <div class="col-md6 border rounded">
     <h2>Action #{{item.id}}</h2>
-    <table>
+    <table class="table">>
         <tr>
             <th>Title</th>
             <th>Chief</th>
@@ -24,7 +24,7 @@
             </td>
         </tr>
     </table>
-    {% if current_user.is_authenticated and current_user == item.user %}
+    {% if current_user.is_authenticated and current_user.id == item.user_id or current_user.is_authenticated and current_user.id == item.chef %}
     <div>
         <a href="/departments/{{ item.id }}" class="btn btn-warning">
             Изменить
@@ -33,7 +33,7 @@
             Удалить
         </a>
     </div>
-    {% elif current_user.is_authenticated and current_user.id == 1 %}
+    {% elif current_user.is_authenticated and current_user.id == item.chef %}
     <div>
         <a href="/departments/{{ item.id }}" class="btn btn-warning">
             Изменить

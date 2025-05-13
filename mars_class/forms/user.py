@@ -16,7 +16,7 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Пароль', validators=[DataRequired()])
     password_again = PasswordField('Повторите пароль',
                                    validators=[DataRequired()])
-    submit = SubmitField('Войти')
+    submit = SubmitField('Зарегистрироваться')
 
 
 class LoginForm(FlaskForm):
@@ -46,7 +46,7 @@ class JobsForm(FlaskForm):
             "10",
         ],
     )
-    is_finished = SubmitField('Завершена')
+    is_finished = BooleanField('Завершена')
     submit = SubmitField('Применить')
 
 

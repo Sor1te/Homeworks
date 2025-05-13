@@ -10,8 +10,7 @@ class Jobs(SqlAlchemyBase):
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
-    team_leader = sqlalchemy.Column(sqlalchemy.Integer,
-                                    sqlalchemy.ForeignKey("users.id"))
+    team_leader = sqlalchemy.Column(sqlalchemy.Integer)
     age = sqlalchemy.Column(sqlalchemy.Integer)
     job = sqlalchemy.Column(sqlalchemy.String)
     work_size = sqlalchemy.Column(sqlalchemy.Integer)
@@ -20,6 +19,8 @@ class Jobs(SqlAlchemyBase):
     end_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
     hazard_level = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     is_finished = sqlalchemy.Column(sqlalchemy.Boolean)
+    user_id = sqlalchemy.Column(sqlalchemy.Integer,
+                                sqlalchemy.ForeignKey("users.id"))
     user = orm.relationship('User')
     categories = orm.relationship("Category",
                                   secondary="association",
